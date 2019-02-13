@@ -28,10 +28,11 @@ var app = app || {};
 		this.onChanges.forEach(function (cb) { cb(); });
 	};
 
-	app.TodoModel.prototype.addTodo = function (title) {
+	app.TodoModel.prototype.addTodo = function (title, priority) {
 		this.todos = this.todos.concat({
 			id: Utils.uuid(),
 			title: title,
+			priority: priority,
 			completed: false
 		});
 

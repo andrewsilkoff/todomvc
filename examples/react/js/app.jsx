@@ -11,6 +11,10 @@ var app = app || {};
 	app.ALL_TODOS = 'all';
 	app.ACTIVE_TODOS = 'active';
 	app.COMPLETED_TODOS = 'completed';
+
+	app.PRIORITY_NORMAL = 'normal';
+	app.PRIORITY_MAJOR = 'major';
+	app.PRIORITY_MINOR = 'minor';
 	var TodoFooter = app.TodoFooter;
 	var TodoItem = app.TodoItem;
 
@@ -21,7 +25,8 @@ var app = app || {};
 			return {
 				nowShowing: app.ALL_TODOS,
 				editing: null,
-				newTodo: ''
+				newTodo: '',
+				newTodoPriority: app.PRIORITY_MAJOR
 			};
 		},
 
@@ -39,6 +44,10 @@ var app = app || {};
 			this.setState({newTodo: event.target.value});
 		},
 
+		handlePriorityChange: function (event) {
+			this.setState({newTodoPriority: event.target.value});
+		},
+
 		handleNewTodoKeyDown: function (event) {
 			if (event.keyCode !== ENTER_KEY) {
 				return;
@@ -49,7 +58,7 @@ var app = app || {};
 			var val = this.state.newTodo.trim();
 
 			if (val) {
-				this.props.model.addTodo(val);
+				this.props.model.addTodo(val, this.state.newTodoPriority);
 				this.setState({newTodo: ''});
 			}
 		},
@@ -163,6 +172,12 @@ var app = app || {};
 							onChange={this.handleChange}
 							autoFocus={true}
 						/>
+						<select value={this.state.newTodoPriority} onChange={this.handlePriorityChange}>
+							<option value="normal">normal</option>
+							<option value="major">major</option>
+							<option value="minor">minor</option>
+						</select>
+
 					</header>
 					{main}
 					{footer}

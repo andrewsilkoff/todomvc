@@ -43,7 +43,7 @@ var app = app || {};
 		},
 
 		getInitialState: function () {
-			return {editText: this.props.todo.title};
+			return {editText: this.props.todo.title, priority: this.props.todo.priority};
 		},
 
 		/**
@@ -101,6 +101,9 @@ var app = app || {};
 						onChange={this.handleChange}
 						onKeyDown={this.handleKeyDown}
 					/>
+					<div>
+						{this.props.todo.priority}
+					</div>
 				</li>
 			);
 		}
