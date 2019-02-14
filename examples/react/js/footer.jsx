@@ -9,6 +9,9 @@ var app = app || {};
 	'use strict';
 
 	app.TodoFooter = React.createClass({
+		handleSortChange: function (type, value) {
+			this.props.onSort(type, value)
+		},
 		render: function () {
 			var activeTodoWord = app.Utils.pluralize(this.props.count, 'item');
 			var clearButton = null;
@@ -24,6 +27,8 @@ var app = app || {};
 			}
 
 			var nowShowing = this.props.nowShowing;
+			var sortABC = this.props.sortABC;
+			var sortPriority = this.props.sortPriority;
 			return (
 				<footer className="footer">
 					<span className="todo-count">
@@ -54,7 +59,58 @@ var app = app || {};
 							</a>
 						</li>
 					</ul>
-					{clearButton}
+
+					<ul className="filters filters-priority">
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortPriority', app.SORT_PRIORITY_OFF)}
+								className={classNames({selected: sortPriority === app.SORT_PRIORITY_OFF})}>
+								-
+							</a>
+						</li>
+						{' '}
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortPriority', app.SORT_PRIORITY_HIGH_TO_LOW)}
+								className={classNames({selected: sortPriority === app.SORT_PRIORITY_HIGH_TO_LOW})}>
+								high to low
+							</a>
+						</li>
+						{' '}
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortPriority', app.SORT_PRIORITY_LOW_TO_HIGH)}
+								className={classNames({selected: sortPriority === app.SORT_PRIORITY_LOW_TO_HIGH})}>
+								low to high
+							</a>
+						</li>
+					</ul>
+
+					<ul className="filters filters-ABC">
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortABC', app.SORT_ABC_OFF)}
+								className={classNames({selected: sortABC === app.SORT_ABC_OFF})}>
+								-
+							</a>
+						</li>
+						{' '}
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortABC', app.SORT_ABC_AZ)}
+								className={classNames({selected: sortABC === app.SORT_ABC_AZ})}>
+								A to Z
+							</a>
+						</li>
+						{' '}
+						<li>
+							<a
+								onClick={this.handleSortChange.bind(this, 'sortABC', app.SORT_ABC_ZA)}
+								className={classNames({selected: sortABC === app.SORT_ABC_ZA})}>
+								Z to A
+							</a>
+						</li>
+					</ul>
 				</footer>
 			);
 		}

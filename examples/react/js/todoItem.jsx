@@ -101,8 +101,8 @@ var app = app || {};
 						onChange={this.handleChange}
 						onKeyDown={this.handleKeyDown}
 					/>
-					<div>
-						{this.props.todo.priority}
+					<div className="priority">
+						priority: {this.props.todo.priority}
 					</div>
 				</li>
 			);

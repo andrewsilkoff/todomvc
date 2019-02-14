@@ -15,6 +15,15 @@ var app = app || {};
 	app.PRIORITY_NORMAL = 'normal';
 	app.PRIORITY_MAJOR = 'major';
 	app.PRIORITY_MINOR = 'minor';
+
+	app.SORT_ABC_AZ = 'az';
+	app.SORT_ABC_ZA = 'za';
+	app.SORT_ABC_OFF = 'off';
+
+	app.SORT_PRIORITY_HIGH_TO_LOW = 'high_to_low';
+	app.SORT_PRIORITY_LOW_TO_HIGH = 'low_to_high';
+	app.SORT_PRIORITY_OFF = 'off';
+
 	var TodoFooter = app.TodoFooter;
 	var TodoItem = app.TodoItem;
 
@@ -24,9 +33,11 @@ var app = app || {};
 		getInitialState: function () {
 			return {
 				nowShowing: app.ALL_TODOS,
+				sortABC: app.SORT_ABC_OFF,
+				sortPriority: app.SORT_PRIORITY_OFF,
 				editing: null,
 				newTodo: '',
-				newTodoPriority: app.PRIORITY_MAJOR
+				newTodoPriority: app.PRIORITY_NORMAL
 			};
 		},
 
@@ -93,6 +104,11 @@ var app = app || {};
 			this.props.model.clearCompleted();
 		},
 
+		sortBy: function (type, value) {
+			this.setState({sortABC: app.SORT_ABC_OFF, sortPriority: app.SORT_PRIORITY_OFF});
+			this.setState({[type]: value});
+		},
+
 		render: function () {
 			var footer;
 			var main;
@@ -108,6 +124,28 @@ var app = app || {};
 					return true;
 				}
 			}, this);
+
+			switch (this.state.sortABC) {
+				case app.SORT_ABC_AZ:
+					shownTodos = sortByABC(shownTodos);
+					break;
+				case app.SORT_ABC_ZA:
+					shownTodos = sortByABC(shownTodos).reverse();
+					break;
+				default:
+					break;
+			}
+
+			switch (this.state.sortPriority) {
+				case app.SORT_PRIORITY_HIGH_TO_LOW:;
+					shownTodos = sortByPriority(shownTodos);
+					break;
+				case app.SORT_PRIORITY_LOW_TO_HIGH:
+					shownTodos = sortByPriority(shownTodos).reverse(shownTodos)
+					break;
+				default:
+					break;
+			}
 
 			var todoItems = shownTodos.map(function (todo) {
 				return (
@@ -136,7 +174,10 @@ var app = app || {};
 						count={activeTodoCount}
 						completedCount={completedCount}
 						nowShowing={this.state.nowShowing}
+						sortABC={this.state.sortABC}
+						sortPriority={this.state.sortPriority}
 						onClearCompleted={this.clearCompleted}
+						onSort={this.sortBy}
 					/>;
 			}
 
@@ -183,6 +224,33 @@ var app = app || {};
 					{footer}
 				</div>
 			);
+
+			function sortByPriority(todos) {
+				return todos.map(function(i) {
+					switch(i.priority) {
+						case "major":
+							i.priorityWeight = 0;
+							break;
+						case "normal":
+							i.priorityWeight = 1;
+							break;
+						case "minor":
+							i.priorityWeight = 2;
+							break;
+						default:
+							break;
+					}
+					return i;
+
+				}).sort(function(a, b) {
+					return a.priorityWeight - b.priorityWeight;
+				});
+			}
+
+			function sortByABC (todos) {
+				return todos.sort((a, b) => a.title.localeCompare(b.title))
+			}
+
 		}
 	});
 
